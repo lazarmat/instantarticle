@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/lazarmat/instantarticle/issues"
   },
-  "homepage": "https://github.com/lazarmat/instantarticle#readme"
+  "homepage": "https://github.com/lazarmat/instantarticle#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
 }
