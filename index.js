@@ -22,39 +22,10 @@ app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
 });
 
-app.post('/facebook/receive', (request, response) => {
-		if (request.body.object === 'page') {
-		 request.body.entry.forEach((entry) => {
-			 entry.changes.forEach((data) => {
-				 if (data.field === 'leadgen') {
-					 requestMethod({
-							url: FB_URL + "/" + data.value.leadgen_id,
-							qs: {access_token:ACCESS_TOKEN},
-							method: 'GET',
-						}, function(error, res, body) {
-							if (error) {
-								console.log('Error sending messages: ', error)
-							} else if (body.error) {
-								console.log('Error: ', body.error)
-							} else {
-								console.log('body', body);
-								console.log('body', res.body);
-								body.field_data.forEach((emailList) => {
-										if (emailList.name === 'email') {
-											emailList.values.forEach((email) => {
-												console.log(email);
-											});
-										}
-								});
-							}
-						})
-				 }
-			 });
-		 });
+app.post('/facebook/webhook', (request, response) => {
 		 response.status(200).end();
-	 }
 });
 
-app.get('/facebook/receive', (request, response) => {
+app.get('/facebook/webhook', (request, response) => {
 	response.status(200).send(request.query['hub.challenge']);
 });
