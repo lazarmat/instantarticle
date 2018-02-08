@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const requestMethod = require('request');
-
+var path = require('path');
 
 const ACCESS_TOKEN = 'fake token';
 const FB_URL = 'https://graph.facebook.com/v2.5/'
@@ -28,4 +28,9 @@ app.post('/facebook/webhook', (request, response) => {
 
 app.get('/facebook/webhook', (request, response) => {
 	response.status(200).send(request.query['hub.challenge']);
+});
+
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/index.html'));
 });

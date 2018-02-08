@@ -1,0 +1,98 @@
+
+
+<html>
+
+<head>
+
+<title>Decisioning Test Page</title>
+
+<!-- A simple button-shape, within which a notification will be placed, advising
+	 the user of the amount of time remaining during which they can view the
+	 current page. -->
+<style>
+	#AccessPanel {
+		text-align: center;
+		border-radius: 25px;
+		width: 200px;
+		height: 50px;
+		display:table-cell;
+		vertical-align:middle;
+		background: #8AC007;
+	}
+</style>
+
+</head>
+
+<body>
+
+<h2>Decisioning Test Page</h2>
+
+<p>
+A test-page, accessed according to rules defined in the Intelligence & Decisioning module.
+</p>
+
+<div id="AccessPanel">
+
+</div>
+
+		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+		<script>
+			// Initialise a counter, which will be incremented by one, each time the getJSON call
+			// is made.
+			//
+			var i = 0;
+
+			// Access the Intelligence & Decisioning platform, passing the X-Token-Id of the client
+			// providing the current content. The platform will check the rules established for the client,
+			// and determine whether the current user is entitled to view the content.
+			//
+			function makeCall(){
+				// Pass to the location of the Intelligence & Decisioning platform (a) the X-Token-Id for the current
+				// client, (b) the address of the current web page, and (c) the current incrementation-level of the
+				// counter.
+				//
+				$.getJSON("https://emeter-uat.mppapi.io/probes/JSONP?callback=?&X-TokenId=F6240279CA2C44DE967F0ACB0E884C00",
+				{ REQUEST_URI: location.href, interval: i},
+
+				// Access the data returned by the call from the Intelligence & Decisioning platform ("data") and examine
+				// it.
+				//
+				function(data) {
+					console.log(data);
+				// Redisplay the sign on the current page, indicating how many seconds have elapsed since page-load.
+				//
+				$('#AccessPanel').text("Access for 10 seconds: " + i);
+
+					// If the Intelligence & Decisioning platform has returned a redirect, access it, and make
+					// it the new location of the page the user is consuming.
+					//
+					if (data.Location){
+						window.location.replace(data.Location);
+					}
+				});
+
+				// Increment the counter each time this function is called.
+				//
+				i++;
+			}
+
+			// Call the makeCall function.
+			//
+			makeCall();
+
+			// ..and then continue to call the function, once every second. This means that the counter-value to be returned to the
+			// Intelligence & Decisioning module is incremented each time (each new value is also displayed on the
+			// current page).
+			//
+			// The rule for the client is established such that the user can consume the content until the counter
+			// reaches 10, at which point a redirect is sent back, and the user is placed on the registration-page.
+			//
+			setInterval(makeCall, 1000);
+
+		</script>
+
+</body>
+
+</html>
+
